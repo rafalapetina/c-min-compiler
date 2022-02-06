@@ -6,6 +6,11 @@
 #include <ctype.h>
 #include <string.h>
 
+#ifndef YYPARSER
+/* the name of the following file may change */
+#include "scanner.tab.h"
+#endif
+
 #ifndef FALSE
 #define FALSE 0
 #endif
@@ -17,20 +22,15 @@
 /* MAXRESERVED = the number of reserved words */
 #define MAXRESERVED 8
 
-typedef enum
-    /* book-keeping tokens */
-   {ENDFILE,ERROR,
-    /* reserved words */
-    IF,THEN,ELSE,END,REPEAT,UNTIL,READ,WRITE,
-    /* multicharacter tokens */
-    ID,NUM,
-    /* special symbols */
-    ASSIGN,EQ,LT,PLUS,MINUS,TIMES,OVER,LPAREN,RPAREN,SEMI
-   } TokenType;
+typedef int TokenType;
 
 extern FILE* source; /* source code text file */
 extern FILE* listing; /* listing output text file */
 extern FILE* code; /* code text file for TM simulator */
+extern FILE *listing;
+extern FILE *tokenList;
+extern FILE *symTab;
+extern FILE *synTree;
 
 extern int lineno; /* source line number for listing */
 
@@ -47,7 +47,7 @@ typedef enum {
 } StmtKind;
 
 typedef enum {
-  opK, constK, idK, vectK, vectIndexK, typeK,
+  opK, constK, idK, vectK, typeK,
 } ExpKind;
 
 typedef enum {
@@ -109,4 +109,8 @@ extern int TraceCode;
 
 /* Error = TRUE prevents further passes if an error occurs */
 extern int Error;
+
+/* Function that counts the number of parameter of a function 
+ * Can be used in function declarations or function calls*/
+int paramCounter(TreeNode *t);
 #endif

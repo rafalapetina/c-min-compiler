@@ -1,0 +1,51 @@
+Palavra reservada: INT, Lexema: int
+ID, name= main
+(
+Palavra reservada: VOID, Lexema: void
+)
+{
+Palavra reservada: INT, Lexema: int
+ID, name= a
+;
+ID, name= a
+=
+NUM, val= 1
+;
+Palavra reservada: WHILE, Lexema: while
+(
+ID, name= a
+<
+NUM, val= 10
+)
+{
+ID, name= x
+[
+ID, name= a
+]
+=
+ID, name= input
+(
+)
+;
+ID, name= a
+=
+ID, name= a
++
+NUM, val= 1
+;
+}
+ID, name= sort
+(
+ID, name= x
+,
+NUM, val= 0
+,
+NUM, val= 10
+)
+;
+ID, name= a
+=
+NUM, val= 0
+;
+}
+Unknown token: 0
