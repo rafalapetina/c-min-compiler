@@ -476,11 +476,16 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "scanner.l"
 #line 2 "scanner.l"
-int lineCount = 0;
-const char *lex_out = "lexical_output.txt";
-FILE* destination;
-#line 482 "lex.yy.c"
-#line 483 "lex.yy.c"
+#include <stdlib.h>
+#include <stdio.h>
+#include "globals.h"
+#include "util.h"
+#include "scan.h"
+
+char tokenString[MAXTOKENLEN+1];
+int yywrap ();
+#line 487 "lex.yy.c"
+#line 488 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -697,9 +702,9 @@ YY_DECL
 		}
 
 	{
-#line 16 "scanner.l"
+#line 21 "scanner.l"
 
-#line 702 "lex.yy.c"
+#line 707 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -758,203 +763,181 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 17 "scanner.l"
+#line 22 "scanner.l"
 {
 	char c;
-	while (1) {
+	while (1){
 		c = input();
 		if (c == EOF)
 			break;
 		if (c == '\n')
-			lineCount;
+		lineno++;
+		if (c == '*') {
+			if(input() == '/')
+				break;
+		}
 	}
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 27 "scanner.l"
-{
-	fprintf(destination, "%d: Reserved word '%s'\n", lineCount, yytext);
-	return ELSE;
-}
+#line 37 "scanner.l"
+{return ELSE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 31 "scanner.l"
-{
-	fprintf(destination, "%d: Reserved word '%s'\n", lineCount, yytext);
-	return IF;
-}
+#line 38 "scanner.l"
+{return IF;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 35 "scanner.l"
-{
-	fprintf(destination, "%d: Reserved word '%s'\n", lineCount, yytext);
-	return INT;
-}
+#line 39 "scanner.l"
+{return INT;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 39 "scanner.l"
-{
-	fprintf(destination, "%d: Reserved word '%s'\n", lineCount, yytext);
-	return RETURN;
-}
+#line 40 "scanner.l"
+{return RETURN;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 43 "scanner.l"
-{
-	fprintf(destination, "%d: Reserved word '%s'\n", lineCount, yytext);
-	return VOID;
-}
+#line 41 "scanner.l"
+{return VOID;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 47 "scanner.l"
-{
-	fprintf(destination, "%d: Reserved word '%s'\n", lineCount, yytext);
-	return WHILE;
-}
+#line 42 "scanner.l"
+{return WHILE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 51 "scanner.l"
-{
-	fprintf(destination, "%d: Reserved word '%s'\n", lineCount, yytext);
-	return NUM;
-}
+#line 43 "scanner.l"
+{return NUM;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 55 "scanner.l"
-{
-	fprintf(destination, "%d: Reserved word '%s'\n", lineCount, yytext);
-	return ID;
-}
+#line 44 "scanner.l"
+{return ID;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 59 "scanner.l"
-return SOM;
+#line 45 "scanner.l"
+{return SOM;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 60 "scanner.l"
-return SUB;
+#line 46 "scanner.l"
+{return SUB;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 61 "scanner.l"
-return MUL;
+#line 47 "scanner.l"
+{return MUL;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 62 "scanner.l"
-return DIV;
+#line 48 "scanner.l"
+{return DIV;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 63 "scanner.l"
-return MENOR;
+#line 49 "scanner.l"
+{return MENOR;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 64 "scanner.l"
-return MENORIGUAL;
+#line 50 "scanner.l"
+{return MENORIGUAL;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 65 "scanner.l"
-return MAIOR;
+#line 51 "scanner.l"
+{return MAIOR;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 66 "scanner.l"
-return MAIORIGUAL;
+#line 52 "scanner.l"
+{return MAIORIGUAL;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 67 "scanner.l"
-return IGUALIGUAL;
+#line 53 "scanner.l"
+{return IGUALIGUAL;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 68 "scanner.l"
-return DIFERENTE;
+#line 54 "scanner.l"
+{return DIFERENTE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 69 "scanner.l"
-return VIRGULA;
+#line 55 "scanner.l"
+{return VIRGULA;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 70 "scanner.l"
-return CHAVESABRE;
+#line 56 "scanner.l"
+{return LCHAVE;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 71 "scanner.l"
-return CHAVESFECHA;
+#line 57 "scanner.l"
+{return RCHAVE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 72 "scanner.l"
-return COLCHETEABRE;
+#line 58 "scanner.l"
+{return LCOLCHETE;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 73 "scanner.l"
-return COLCHETEFECHA;
+#line 59 "scanner.l"
+{return RCOLCHETE;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 74 "scanner.l"
-return IGL;
+#line 60 "scanner.l"
+{return IGUAL;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 75 "scanner.l"
-return PEV;
+#line 61 "scanner.l"
+{return SEMICOL;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 76 "scanner.l"
-return APR;
+#line 62 "scanner.l"
+{return LPAREN;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 77 "scanner.l"
-return FPR;
-	YY_BREAK
-case YY_STATE_EOF(INITIAL):
-#line 78 "scanner.l"
-return FIM;
+#line 63 "scanner.l"
+{return RPAREN;}
 	YY_BREAK
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 79 "scanner.l"
+#line 64 "scanner.l"
 lineno++;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 80 "scanner.l"
-{}//eat whitespace and tab
+#line 65 "scanner.l"
+{}//skip whitespace
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 81 "scanner.l"
-return ERR;
+#line 66 "scanner.l"
+return ERROR;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 83 "scanner.l"
+#line 68 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 957 "lex.yy.c"
+#line 938 "lex.yy.c"
+case YY_STATE_EOF(INITIAL):
+	yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1957,28 +1940,31 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 83 "scanner.l"
+#line 68 "scanner.l"
 
 
-int yywrap(){}
+int yywrap () {  };
 
-int main(int argc, char *argv[]){
-
-FILE *open_file;
-
-printf("argc: %d\n", argc);
-printf("%s\n", argv[1]);
-
-open_file = fopen(argv[1],"r");
-destination = fopen(lex_out, "w");
-
-yyin = open_file;
-
-yylex();
-
-fclose(open_file);
-fclose(destination);
-
-return 0;
+TokenType getToken(void) {
+	static int firstTime = TRUE;
+	TokenType currentToken;
+	if (firstTime) {
+			firstTime = FALSE;
+		lineno++;
+		yyin = source;
+		yyout = listing;
+	}
+	currentToken = yylex();
+	printf("%d ", currentToken);
+	strncpy(tokenString,yytext,MAXTOKENLEN);
+	if (TraceScan) {
+		fprintf(listing,"\t%d: ",lineno);
+			printToken(tokenList, currentToken,tokenString);
+	}
+		if (currentToken == ERROR) {
+			printf("\nERRO LÉXICO. Linha: %d, ", lineno);
+			printToken(listing, currentToken,tokenString);
+			Error = TRUE;
+		}
+	return currentToken;
 }
-

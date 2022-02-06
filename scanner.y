@@ -11,6 +11,8 @@ static char * savedName; /* for use in assignments */
 static int savedLineNo;  /* ditto */
 static TreeNode * savedTree; /* stores syntax tree for later return */
 
+static int yylex(void);
+int yyerror(char *message);
 %}
 // Define all tokens that can be accepted as terminals in the lexical analysis
 
@@ -54,18 +56,14 @@ id                  : ID
                     ;
 var_decl            : tipo id SEMICOL
                         {
-                          $$->child[0] = $1;
-                          $$->child[1] = $2;
-                          $2->nodekind = statementK;
-              						$2->kind.stmt = varK;
-              						$2->type = integert;
-              						$2->attr.len = 1;
+                          $$ = $1;
+                          $$->child[0] = $2;
                         }
                     | tipo id LCOLCHETE num RCOLCHETE SEMICOL
                         {
-                          $$->child[0] = $1;
+                          $$ = $1;
                           $$->child[1] = $2;
-              						$2->nodekind = statementK;
+              						$2->nodekind = stmtK;
               						$2->kind.stmt = varK;
               						$2->type = voidt;
               						$2->attr.len = $4->attr.val;
@@ -94,9 +92,10 @@ num                 : NUM
 fun_decl            : tipo ID LPAREN params RPAREN composto_decl
                         {
                           $$ = $1;
-                          $$ = newExpNode(funcK);
-                          $1->child[0] = $4;
-                          $1->child[1] = $6;
+                          YYSTYPE t = newStmtNode(funcK);
+                          t->child[0] = $4;
+                          t->child[1] = $6;
+                          $$->child[0] = t;
                         }
                     ;
 params              : param_lista
@@ -108,14 +107,33 @@ params              : param_lista
                         }
                     ;
 param_lista         : param_lista VIRGULA param
-                        {  }
+                        {
+                          YYSTYPE t = $1;
+                          if(t != NULL){
+                              while(t->sibling != NULL)
+                                  t = t->sibling;
+                              t->sibling = $3;
+                              $$ = $1;
+                          }
+                          else $$ = $3;
+                        }
                     | param
                         { $$ = $1; }
                     ;
 param               : tipo id
-                        {  }
+                        {
+                          $$ = $1;
+                          $2->nodekind = stmtK;
+                          $2->kind.stmt = paramK;
+                          $$->child[0] = $2;
+                        }
                     | tipo id LCOLCHETE RCOLCHETE
-                        {  }
+                        {
+                          $$ = $1;
+                          $2->nodekind = stmtK;
+                          $2->kind.stmt = paramK;
+                          $$->child[0] = $2;
+                        }
                     ;
 composto_decl       : LCHAVE local_decl stmt_lista RCHAVE
                         {
@@ -155,7 +173,7 @@ stmt_lista          : stmt_lista stmt
                           if(t != NULL){
               							while(t->sibling != NULL)
                               t = t->sibling;
-                            t->sibling = $1;
+                            t->sibling = $2;
                             $$ = $1;
                           }
               						else $$ = $2;
@@ -174,7 +192,7 @@ stmt                : expressao_decl
                     | retorno_decl
                         { $$ = $1; }
                     ;
-espressao_decl      : expressao SEMICOL
+expressao_decl      : expressao SEMICOL
                         { $$ = $1; }
                     | SEMICOL
                         {  }
@@ -185,7 +203,7 @@ selecao_decl        : IF LPAREN expressao RPAREN stmt
                           $$->child[0] = $3;
                           $$->child[1] = $5;
                         }
-                    | IF LPAREN expressao RPAREN statement ELSE stmt
+                    | IF LPAREN expressao RPAREN stmt ELSE stmt
                         {
                           $$ = newStmtNode(ifK);
                           $$->child[0] = $3;
@@ -212,77 +230,152 @@ retorno_decl        : RETURN SEMICOL
                         }
                     ;
 expressao           : var IGUAL expressao
-                        {  }
+                        {
+                          $$ = newStmtNode(assignK);
+                          $$->child[0] = $1;
+                          $$->child[1] = $3;
+                        }
                     | simples_expressao
-                        {  }
+                        { $$ = $1; }
                     ;
 var                 : id
-                        {  }
+                        { $$ = $1; }
                     | id LCOLCHETE expressao RCOLCHETE
-                        {  }
+                        {
+                          $$ = $1;
+                          $$->child[1] = $3;
+                          $$->kind.exp = vectK;
+                        }
                     ;
 simples_expressao   : soma_expressao relacional soma_expressao
-                        {  }
+                        {
+                          $$ = $2;
+                          $$->child[0] = $1;
+                          $$->child[1] = $3;
+                        }
                     | soma_expressao
-                        {  }
+                        { $$ = $1; }
                     ;
 relacional          : MENORIGUAL
-                        {  }
+                        {
+                          $$ = newExpNode(opK);
+                          $$->attr.op = MENORIGUAL;
+              						$$->type = booleant;
+                        }
                     | MENOR
-                        {  }
+                        {
+                          $$ = newExpNode(opK);
+                          $$->attr.op = MENOR;
+                          $$->type = booleant;
+                        }
                     | MAIOR
-                        {  }
+                        {
+                          $$ = newExpNode(opK);
+                          $$->attr.op = MAIOR;
+                          $$->type = booleant;
+                        }
                     | MAIORIGUAL
-                        {  }
+                        {
+                          $$ = newExpNode(opK);
+                          $$->attr.op = MAIORIGUAL;
+                          $$->type = booleant;
+                        }
                     | IGUALIGUAL
-                        {  }
+                        {
+                          $$ = newExpNode(opK);
+                          $$->attr.op = IGUALIGUAL;
+                          $$->type = booleant;
+                        }
                     | DIFERENTE
-                        {  }
+                        {
+                          $$ = newExpNode(opK);
+                          $$->attr.op = DIFERENTE;
+                          $$->type = booleant;
+                        }
                     ;
 soma_expressao      : soma_expressao soma termo
-                        {  }
+                        {
+                          $$ = $2;
+                          $$->child[0] = $1;
+                          $$->child[1] = $3;
+                        }
                     | termo
-                        {  }
+                        { $$ = $1; }
                     ;
 soma                : SOM
-                        {  }
+                        {
+                          $$ = newExpNode(opK);
+                          $$->attr.op = SOM;
+                        }
                     | SUB
-                        {  }
+                      {
+                        $$ = newExpNode(opK);
+                        $$->attr.op = SUB;
+                      }
                     ;
 termo               : termo mult fator
-                        {  }
+                      {
+                        $$ = $2;
+                        $$->child[0] = $1;
+                        $$->child[1] = $3;
+                      }
                     | fator
-                        {  }
+                        { $$ = $1; }
                     ;
 mult                : MUL
-                        {  }
+                      {
+                        $$ = newExpNode(opK);
+                        $$->attr.op = MUL;
+                      }
                     | DIV
-                        {  }
+                        {
+                          $$ = newExpNode(opK);
+                          $$->attr.op = DIV;
+                        }
                     ;
 fator               : LPAREN expressao RPAREN
-                        {  }
+                        { $$ = $2; }
                     | var
-                        {  }
+                        { $$ = $1; }
                     | ativacao
-                        {  }
+                        { $$ = $1; }
                     | num
-                        {  }
+                        { $$ = $1; }
                     ;
-ativacao            : id LPAREN args RPAREN
-                        {  }
+ativacao            : id LPAREN arg_lista RPAREN
+                        { 
+                          $$ = $1;
+                          $$->child[0] = $3;
+                          $$->nodekind = stmtK;
+                          $$->kind.stmt = callK;
+                        }
+                    | id LPAREN RPAREN
+                        {
+                          $$ = $1;
+                          $$->nodekind = stmtK;
+                          $$->kind.stmt = callK;
+                        }
                     ;
-arg                 : arg_lista VIRGULA expressao
-                        {  }
+arg_lista           : arg_lista VIRGULA expressao
+                        {
+                          YYSTYPE t = $1;
+                          if(t != NULL){
+              							while(t->sibling != NULL)
+                              t = t->sibling;
+                            t->sibling = $3;
+                            $$ = $1;
+                          }
+              						else $$ = $3;
+                        }
                     | expressao
-                        {  }
+                        { $$ = $1; }
                     ;
-
 %%
 
 int yyerror(char * message) {
   fprintf(listing,"Syntax error at line %d: %s\n",lineno,message);
   fprintf(listing,"Current token: ");
-  printToken(yychar,tokenString);
+  printToken(listing, yychar,tokenString);
   Error = TRUE;
   return 0;
 }

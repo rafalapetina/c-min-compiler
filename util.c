@@ -53,7 +53,7 @@ TreeNode * newStmtNode(StmtKind kind)
       t->child[i] = NULL;
     }
     t->sibling = NULL;
-    t->nodekind = statementK;
+    t->nodekind = stmtK;
     t->kind.stmt = kind;
     t->lineno = lineno;
     t->attr.scope = "global";
@@ -74,10 +74,10 @@ TreeNode * newExpNode(ExpKind kind)
       t->child[i] = NULL;
     }
     t->sibling = NULL;
-    t->nodekind = expressionK;
+    t->nodekind = expK;
     t->kind.exp = kind;
     t->lineno = lineno;
-    t->type = VOID;
+    t->type = voidt;
     t->attr.scope = "global";
   }
   return t;
@@ -117,13 +117,13 @@ static void printSpaces(void)
 /* procedure printTree prints a syntax tree to the
  * listing file using indentation to indicate subtrees
  */
-void printTree( TreeNode * tree )
-{ int i;
+void printTree( TreeNode * tree ) {
+  int i;
   INDENT;
   while (tree != NULL) {
     printSpaces();
-    if (tree->nodekind==StmtK)
-    { switch (tree->kind.stmt) {
+    if (tree->nodekind==stmtK){
+      switch (tree->kind.stmt) {
         case ifK:     fprintf(synTree,"If\n"); break;
         case whileK:  fprintf(synTree,"While\n"); break;
         case paramK:  fprintf(synTree,"Parametro: %s\n", tree->attr.name); break;
@@ -136,7 +136,7 @@ void printTree( TreeNode * tree )
         default:      fprintf(synTree,"Unknown ExpNode kind 1\n"); break;
       }
     }
-    else if (tree->nodekind==ExpK) {
+    else if (tree->nodekind==expK) {
       switch (tree->kind.exp) {
         case opK:
           fprintf(synTree,"Op: ");
@@ -150,9 +150,6 @@ void printTree( TreeNode * tree )
           break;
         case vectK:
           fprintf(synTree,"Vetor: %s\n",tree->attr.name);
-          break;
-        case vectIndexK:
-          fprintf(synTree,"Indíce: [%d]\n",tree->attr.val);
           break;
         case typeK:
           fprintf(synTree,"Type %s\n",tree->attr.name);

@@ -1,9 +1,12 @@
 %{
-	#include "globals.h"
-	#include "util.h"
-	#include "scan.h"
-	/* lexeme of identifier or reserved word */
-	char tokenString[MAXTOKENLEN+1];
+#include <stdlib.h>
+#include <stdio.h>
+#include "globals.h"
+#include "util.h"
+#include "scan.h"
+
+char tokenString[MAXTOKENLEN+1];
+int yywrap ();
 %}
 
 NUM [0-9]+
@@ -58,29 +61,33 @@ WHILE while
 ";"							{return SEMICOL;}
 "("							{return LPAREN;}
 ")"							{return RPAREN;}
-<<EOF>> 				{return FIM;}
 "\n"            lineno++;
 [ \t]+					{}//skip whitespace
 .								return ERROR;
 
 %%
 
-int yywrap(){}
+int yywrap () {  };
 
-TokenType getToken(void)
-{ static int firstTime = TRUE;
-  TokenType currentToken;
-  if (firstTime)
-  { firstTime = FALSE;
-    lineno++;
-    yyin = source;
-    yyout = listing;
-  }
-  currentToken = yylex();
-  strncpy(tokenString,yytext,MAXTOKENLEN);
-  if (TraceScan) {
-    fprintf(listing,"\t%d: ",lineno);
-    printToken(currentToken,tokenString);
-  }
-  return currentToken;
+TokenType getToken(void) {
+	static int firstTime = TRUE;
+	TokenType currentToken;
+	if (firstTime) {
+			firstTime = FALSE;
+		lineno++;
+		yyin = source;
+		yyout = listing;
+	}
+	currentToken = yylex();
+	strncpy(tokenString,yytext,MAXTOKENLEN);
+	if (TraceScan) {
+		fprintf(listing,"\t%d: ",lineno);
+			printToken(tokenList, currentToken,tokenString);
+	}
+		if (currentToken == ERROR) {
+			printf("\nERRO LÉXICO. Linha: %d, ", lineno);
+			printToken(listing, currentToken,tokenString);
+			Error = TRUE;
+		}
+	return currentToken;
 }
