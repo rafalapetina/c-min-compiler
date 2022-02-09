@@ -1,0 +1,76 @@
+	4: Palavra reservada: INT, Lexema: int
+	4: ID, name= gcd
+	4: (
+	4: Palavra reservada: INT, Lexema: int
+	4: ID, name= u
+	4: ,
+	4: Palavra reservada: INT, Lexema: int
+	4: ID, name= v
+	4: ,
+	4: Palavra reservada: INT, Lexema: int
+	4: ID, name= a
+	4: [
+	4: ]
+	4: )
+	4: {
+	5: Palavra reservada: IF, Lexema: if
+	5: (
+	5: ID, name= v
+	5: ==
+	5: NUM, val= 0
+	5: )
+	5: Palavra reservada: RETURN, Lexema: return
+	5: ID, name= u
+	5: ;
+	6: Palavra reservada: ELSE, Lexema: else
+	6: Palavra reservada: RETURN, Lexema: return
+	6: ID, name= gcd
+	6: (
+	6: ID, name= v
+	6: ,
+	6: ID, name= u
+	6: -
+	6: ID, name= u
+	6: /
+	6: ID, name= v
+	6: *
+	6: ID, name= v
+	6: )
+	6: ;
+	8: }
+	10: Palavra reservada: VOID, Lexema: void
+	10: ID, name= main
+	10: (
+	10: Palavra reservada: VOID, Lexema: void
+	10: )
+	11: {
+	12: Palavra reservada: INT, Lexema: int
+	12: ID, name= x
+	12: ;
+	12: Palavra reservada: INT, Lexema: int
+	12: ID, name= y
+	12: ;
+	13: ID, name= x
+	13: =
+	13: ID, name= input
+	13: (
+	13: )
+	13: ;
+	13: ID, name= y
+	13: =
+	13: ID, name= input
+	13: (
+	13: )
+	13: ;
+	14: ID, name= output
+	14: (
+	14: ID, name= gcd
+	14: (
+	14: ID, name= x
+	14: ,
+	14: ID, name= y
+	14: )
+	14: )
+	14: ;
+	15: }
+	62: EOF

@@ -1,0 +1,40 @@
+  Declaração Função: int gcd()
+    Parametro: int u
+    Parametro: int v
+    Vetor Parametro: a
+    Composto declaracao
+      If
+        Operador: ==
+          Id: v
+          Op: ==
+          Const: 0
+        Return
+          Id: u
+        Return
+          Chamada Função: gcd
+            Id: v
+            Operador: -
+              Id: u
+              Op: -
+              Operador: *
+                Operador: /
+                  Id: u
+                  Op: /
+                  Id: v
+                Op: *
+                Id: v
+  Declaração Função: void main()
+    Parametro: void void
+    Composto declaracao
+      Declaração Variável: int x;
+      Declaração Variável: int y;
+      Assign
+        Id: x
+        Chamada Função: input
+      Assign
+        Id: y
+        Chamada Função: input
+      Chamada Função: output
+        Chamada Função: gcd
+          Id: x
+          Id: y

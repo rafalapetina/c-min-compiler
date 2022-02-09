@@ -7,8 +7,8 @@
 #include <string.h>
 
 #ifndef YYPARSER
-/* the name of the following file may change */
 #include "scanner.tab.h"
+#define ENDFILE 0
 #endif
 
 #ifndef FALSE
@@ -20,7 +20,7 @@
 #endif
 
 /* MAXRESERVED = the number of reserved words */
-#define MAXRESERVED 8
+#define MAXRESERVED 6
 
 typedef int TokenType;
 
@@ -38,42 +38,44 @@ extern int lineno; /* source line number for listing */
 /***********   Syntax tree for parsing ************/
 /**************************************************/
 
-typedef enum {
-  stmtK, expK
-} NodeKind;
+typedef enum { stmtK, expK, declK } NodeKind;
+typedef enum { ifK, whileK, assignK, compostoK, returnK } stmtKind;
+typedef enum { opK, ConstK, IdK, typeK, vectIdK, callK, calcK } expKind;
+typedef enum { varK, funcK, vectvarK, vectparamK, paramK } declKind;
 
-typedef enum {
-  ifK, whileK, assignK, varK, funcK, callK, returnK, argK, paramK
-} StmtKind;
-
-typedef enum {
-  opK, constK, idK, vectK, typeK,
-} ExpKind;
-
-typedef enum {
-  voidt, integert,booleant
-} ExpType;
+/* ExpType is used for type checking */
+typedef enum { Void, Integer, VectInt } ExpType;
 
 #define MAXCHILDREN 3
 
-typedef struct treeNode
-   { struct treeNode * child[MAXCHILDREN];
-     struct treeNode * sibling;
-     int lineno;
-     NodeKind nodekind;
-     union {
-       StmtKind stmt;
-       ExpKind exp;
-     } kind;
-     union {
-       TokenType op;
-       int val;
-       int  len;
-       char* name;
-       char* scope;
-     } attr;
-     ExpType type; /* for type checking of exps */
-   } TreeNode;
+struct EscopoLista;
+
+typedef struct ArrayAttribute {
+  TokenType type;
+  char * name;
+  int size;
+} VectAttr;
+
+typedef struct treeNode {
+  struct treeNode * child[MAXCHILDREN];
+  struct treeNode * sibling;
+  int lineno;
+  NodeKind nodekind;
+  union {
+   stmtKind stmt;
+   expKind exp;
+   declKind decl;
+  } kind;
+  union {
+   TokenType op;
+   TokenType type;
+   int val;
+   char * name;
+   VectAttr arr;
+   struct EscopoLista * escopo;
+  } attr;
+  ExpType type;
+} TreeNode;
 
 /**************************************************/
 /***********   Flags for tracing       ************/
@@ -109,8 +111,4 @@ extern int TraceCode;
 
 /* Error = TRUE prevents further passes if an error occurs */
 extern int Error;
-
-/* Function that counts the number of parameter of a function 
- * Can be used in function declarations or function calls*/
-int paramCounter(TreeNode *t);
 #endif

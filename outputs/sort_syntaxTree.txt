@@ -1,0 +1,136 @@
+  Declaração Vetor: int x[10];
+  Declaração Função: int minloc()
+    Vetor Parametro: a
+    Parametro: int low
+    Parametro: int high
+    Composto declaracao
+      Declaração Variável: int i;
+      Declaração Variável: int x;
+      Declaração Variável: int k;
+      Assign
+        Id: k
+        Id: low
+      Assign
+        Id: x
+        Id vetor 
+          Id: low
+      Assign
+        Id: i
+        Operador: +
+          Id: low
+          Op: +
+          Const: 1
+      While
+        Operador: <
+          Id: i
+          Op: <
+          Id: high
+        Composto declaracao
+          If
+            Operador: <
+              Id vetor 
+                Id: i
+              Op: <
+              Id: x
+            Composto declaracao
+              Assign
+                Id: x
+                Id vetor 
+                  Id: i
+              Assign
+                Id: k
+                Id: i
+          Assign
+            Id: i
+            Operador: +
+              Id: i
+              Op: +
+              Const: 1
+      Return
+        Id: k
+  Declaração Função: void sort()
+    Vetor Parametro: a
+    Parametro: int low
+    Parametro: int high
+    Composto declaracao
+      Declaração Variável: int i;
+      Declaração Variável: int k;
+      Assign
+        Id: i
+        Id: low
+      While
+        Operador: <
+          Id: i
+          Op: <
+          Operador: -
+            Id: high
+            Op: -
+            Const: 1
+        Composto declaracao
+          Declaração Variável: int t;
+          Assign
+            Id: k
+            Chamada Função: minloc
+              Id: a
+              Id: i
+              Id: high
+          Assign
+            Id: t
+            Id vetor 
+              Id: k
+          Assign
+            Id vetor 
+              Id: k
+            Id vetor 
+              Id: i
+          Assign
+            Id vetor 
+              Id: i
+            Id: t
+          Assign
+            Id: i
+            Operador: +
+              Id: i
+              Op: +
+              Const: 1
+  Declaração Função: void main()
+    Parametro: void void
+    Composto declaracao
+      Declaração Variável: int i;
+      Assign
+        Id: i
+        Const: 0
+      While
+        Operador: <
+          Id: i
+          Op: <
+          Const: 10
+        Composto declaracao
+          Assign
+            Id vetor 
+              Id: i
+            Chamada Função: input
+          Assign
+            Id: i
+            Operador: +
+              Id: i
+              Op: +
+              Const: 1
+      Assign
+        Id: i
+        Const: 0
+      While
+        Operador: <
+          Id: i
+          Op: <
+          Const: 10
+        Composto declaracao
+          Chamada Função: output
+            Id vetor 
+              Id: i
+          Assign
+            Id: i
+            Operador: +
+              Id: i
+              Op: +
+              Const: 1

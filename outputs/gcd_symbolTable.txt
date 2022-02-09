@@ -1,0 +1,14 @@
+  Symbol table  
+
+---------------------------------------------------------------------------
+Name       Type             Scope       Data Type     Location   Line Numbers 
+---------  ---------------  ----------  ------------  ---------  --------------
+input     Function          global       Integer       1         0
+output    Function          global       Void          0         0
+gcd       Function          global       Integer       0         4
+a         Array Parameter   gcd          Integer       3         4
+u         Parameter         gcd          Integer       1         4, 5, 6, 6
+v         Parameter         gcd          Integer       2         4, 5, 6, 6, 6
+x         Variable          main         Integer       0         12, 13, 14
+y         Variable          main         Integer       1         12, 13, 14
+---------------------------------------------------------------------------

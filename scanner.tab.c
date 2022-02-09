@@ -77,11 +77,11 @@
 #include "parse.h"
 
 #define YYSTYPE TreeNode *
+static int savedNumber;
 static char * savedName; /* for use in assignments */
 static int savedLineNo;  /* ditto */
 static TreeNode * savedTree; /* stores syntax tree for later return */
-
-static int yylex(void);
+static int yylex(void); // added 11/2/11 to ensure no conflict with lex
 int yyerror(char *message);
 
 #line 88 "scanner.tab.c"
@@ -149,32 +149,36 @@ enum yysymbol_kind_t
   YYSYMBOL_decl_lista = 34,                /* decl_lista  */
   YYSYMBOL_decl = 35,                      /* decl  */
   YYSYMBOL_id = 36,                        /* id  */
-  YYSYMBOL_var_decl = 37,                  /* var_decl  */
-  YYSYMBOL_tipo = 38,                      /* tipo  */
-  YYSYMBOL_num = 39,                       /* num  */
+  YYSYMBOL_num = 37,                       /* num  */
+  YYSYMBOL_var_decl = 38,                  /* var_decl  */
+  YYSYMBOL_tipo = 39,                      /* tipo  */
   YYSYMBOL_fun_decl = 40,                  /* fun_decl  */
-  YYSYMBOL_params = 41,                    /* params  */
-  YYSYMBOL_param_lista = 42,               /* param_lista  */
-  YYSYMBOL_param = 43,                     /* param  */
-  YYSYMBOL_composto_decl = 44,             /* composto_decl  */
-  YYSYMBOL_local_decl = 45,                /* local_decl  */
-  YYSYMBOL_stmt_lista = 46,                /* stmt_lista  */
-  YYSYMBOL_stmt = 47,                      /* stmt  */
-  YYSYMBOL_expressao_decl = 48,            /* expressao_decl  */
-  YYSYMBOL_selecao_decl = 49,              /* selecao_decl  */
-  YYSYMBOL_iteracao_decl = 50,             /* iteracao_decl  */
-  YYSYMBOL_retorno_decl = 51,              /* retorno_decl  */
-  YYSYMBOL_expressao = 52,                 /* expressao  */
-  YYSYMBOL_var = 53,                       /* var  */
-  YYSYMBOL_simples_expressao = 54,         /* simples_expressao  */
-  YYSYMBOL_relacional = 55,                /* relacional  */
-  YYSYMBOL_soma_expressao = 56,            /* soma_expressao  */
-  YYSYMBOL_soma = 57,                      /* soma  */
-  YYSYMBOL_termo = 58,                     /* termo  */
-  YYSYMBOL_mult = 59,                      /* mult  */
-  YYSYMBOL_fator = 60,                     /* fator  */
-  YYSYMBOL_ativacao = 61,                  /* ativacao  */
-  YYSYMBOL_arg_lista = 62                  /* arg_lista  */
+  YYSYMBOL_41_1 = 41,                      /* @1  */
+  YYSYMBOL_params = 42,                    /* params  */
+  YYSYMBOL_param_lista = 43,               /* param_lista  */
+  YYSYMBOL_param = 44,                     /* param  */
+  YYSYMBOL_composto_decl = 45,             /* composto_decl  */
+  YYSYMBOL_local_decl = 46,                /* local_decl  */
+  YYSYMBOL_stmt_lista = 47,                /* stmt_lista  */
+  YYSYMBOL_stmt = 48,                      /* stmt  */
+  YYSYMBOL_expressao_decl = 49,            /* expressao_decl  */
+  YYSYMBOL_selecao_decl = 50,              /* selecao_decl  */
+  YYSYMBOL_iteracao_decl = 51,             /* iteracao_decl  */
+  YYSYMBOL_retorno_decl = 52,              /* retorno_decl  */
+  YYSYMBOL_expressao = 53,                 /* expressao  */
+  YYSYMBOL_var = 54,                       /* var  */
+  YYSYMBOL_55_2 = 55,                      /* @2  */
+  YYSYMBOL_simples_expressao = 56,         /* simples_expressao  */
+  YYSYMBOL_relacional = 57,                /* relacional  */
+  YYSYMBOL_soma_expressao = 58,            /* soma_expressao  */
+  YYSYMBOL_soma = 59,                      /* soma  */
+  YYSYMBOL_termo = 60,                     /* termo  */
+  YYSYMBOL_mult = 61,                      /* mult  */
+  YYSYMBOL_fator = 62,                     /* fator  */
+  YYSYMBOL_ativacao = 63,                  /* ativacao  */
+  YYSYMBOL_64_3 = 64,                      /* @3  */
+  YYSYMBOL_args = 65,                      /* args  */
+  YYSYMBOL_arg_lista = 66                  /* arg_lista  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -502,16 +506,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   137
+#define YYLAST   97
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  32
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  31
+#define YYNNTS  35
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  67
+#define YYNRULES  68
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  110
+#define YYNSTATES  107
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   286
@@ -563,13 +567,13 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    27,    27,    30,    43,    46,    48,    51,    57,    62,
-      72,    78,    85,    92,   101,   103,   109,   120,   123,   130,
-     138,   149,   151,   153,   156,   167,   170,   181,   184,   186,
-     188,   190,   192,   195,   197,   200,   206,   214,   221,   226,
-     232,   238,   241,   243,   250,   256,   259,   265,   271,   277,
-     283,   289,   296,   302,   305,   310,   316,   322,   325,   330,
-     336,   338,   340,   342,   345,   352,   359,   370
+       0,    26,    26,    29,    40,    43,    45,    48,    53,    58,
+      64,    73,    77,    82,    82,    94,    96,   101,   111,   113,
+     118,   124,   130,   140,   142,   152,   154,   155,   156,   157,
+     158,   160,   161,   163,   168,   175,   181,   185,   190,   195,
+     197,   201,   201,   210,   216,   218,   222,   226,   230,   234,
+     238,   243,   249,   251,   255,   260,   266,   268,   272,   277,
+     278,   279,   280,   286,   286,   294,   295,   297,   307
 };
 #endif
 
@@ -590,12 +594,12 @@ static const char *const yytname[] =
   "MENOR", "MENORIGUAL", "MAIOR", "MAIORIGUAL", "IGUALIGUAL", "DIFERENTE",
   "VIRGULA", "LCHAVE", "RCHAVE", "LCOLCHETE", "RCOLCHETE", "IGUAL",
   "SEMICOL", "LPAREN", "RPAREN", "FIM", "ERROR", "$accept", "programa",
-  "decl_lista", "decl", "id", "var_decl", "tipo", "num", "fun_decl",
+  "decl_lista", "decl", "id", "num", "var_decl", "tipo", "fun_decl", "@1",
   "params", "param_lista", "param", "composto_decl", "local_decl",
   "stmt_lista", "stmt", "expressao_decl", "selecao_decl", "iteracao_decl",
-  "retorno_decl", "expressao", "var", "simples_expressao", "relacional",
-  "soma_expressao", "soma", "termo", "mult", "fator", "ativacao",
-  "arg_lista", YY_NULLPTR
+  "retorno_decl", "expressao", "var", "@2", "simples_expressao",
+  "relacional", "soma_expressao", "soma", "termo", "mult", "fator",
+  "ativacao", "@3", "args", "arg_lista", YY_NULLPTR
 };
 
 static const char *
@@ -605,12 +609,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-47)
+#define YYPACT_NINF (-68)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-16)
+#define YYTABLE_NINF (-64)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -619,17 +623,17 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      15,   -47,   -47,    19,    15,   -47,   -47,    32,   -47,   -47,
-     -47,     5,   -10,    46,    44,   -47,    28,    49,    47,    45,
-     -47,   -47,    52,   -47,    55,    61,    15,    57,    60,    37,
-     -47,   -47,   -47,   -47,    62,    22,    65,   -47,   -47,     0,
-      24,   -47,    49,   -47,   -47,    64,    72,   -47,   -47,   -47,
-     -47,   -47,    69,    63,   -47,   117,    -2,   -47,   -47,     0,
-     -47,    70,     0,    59,     0,    -3,   -47,   -47,    95,   -47,
-     -47,   -47,     0,   -47,   -47,   -47,   -47,   -47,   -47,   -47,
-     -47,     0,     0,   -47,   -47,     0,    73,   -47,    78,   -47,
-      83,   -47,   -47,   -13,   -47,   -47,   -47,    50,    -2,   -47,
-     103,   103,   -47,     0,   -47,   106,   -47,   -47,   103,   -47
+      11,   -68,   -68,    38,    11,   -68,   -68,    41,   -68,   -68,
+     -68,   -68,   -21,    42,   -68,    30,   -68,    34,    12,    35,
+      43,    41,    44,    50,   -68,   -68,    46,    52,    11,    51,
+     -68,   -68,   -68,   -68,    11,   -68,    41,    -1,   -21,    47,
+      15,    53,   -68,   -68,     3,     9,   -68,   -68,   -68,   -68,
+     -68,   -68,   -68,    55,    54,   -68,    49,    31,   -68,   -68,
+       3,   -68,    56,     3,    48,    60,    57,   -68,     3,   -68,
+     -68,   -68,   -68,   -68,   -68,   -68,   -68,     3,     3,   -68,
+     -68,     3,    58,   -68,    59,   -68,     3,     3,   -68,   -68,
+      45,    31,   -68,    26,    26,    61,   -68,    62,    68,    74,
+     -68,   -68,   -68,     3,    26,   -68,   -68
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -637,35 +641,35 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,    10,    11,     0,     2,     4,     5,     0,     6,     1,
-       3,     7,     0,     0,     0,     8,    11,     0,     0,    14,
-      17,    12,     0,     7,    18,     0,     0,     0,     0,     0,
-      13,    16,     9,    19,     0,     0,     0,    23,    34,     0,
-      42,    25,     0,    63,    29,     0,     0,    27,    28,    30,
-      31,    32,     0,    61,    41,    45,    53,    57,    62,     0,
-      38,     0,     0,     0,     0,     0,    21,    24,     0,    22,
-      26,    33,     0,    54,    55,    47,    46,    48,    49,    50,
-      51,     0,     0,    58,    59,     0,     0,    39,     0,    60,
-       0,    65,    67,     0,    20,    40,    61,    44,    52,    56,
-       0,     0,    43,     0,    64,    35,    37,    66,     0,    36
+       0,    11,    12,     0,     2,     4,     5,     0,     6,     1,
+       3,     7,    13,     0,     9,     0,     8,     0,     0,     0,
+      12,     0,     0,    15,    18,    10,    19,     0,     0,     0,
+      23,    14,    17,    20,    25,    22,     0,     0,     0,     0,
+       0,     0,    21,    32,     0,    40,    62,    27,    24,    26,
+      28,    29,    30,     0,    60,    39,    44,    52,    56,    61,
+       0,    36,     0,     0,     0,     0,     0,    31,     0,    53,
+      54,    45,    46,    47,    48,    49,    50,     0,     0,    57,
+      58,     0,     0,    37,     0,    59,     0,    66,    38,    60,
+      43,    51,    55,     0,     0,     0,    68,     0,    65,    33,
+      35,    42,    64,     0,     0,    67,    34
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -47,   -47,   -47,   110,    -4,   -24,   -11,   101,   -47,   -47,
-     -47,    90,    94,   -47,    75,   -45,   -47,   -47,   -47,   -47,
-     -35,   -46,   -47,   -47,    40,   -47,    42,   -47,    41,   -47,
-     -47
+     -68,   -68,   -68,    75,    -6,    77,    63,    21,   -68,   -68,
+     -68,   -68,    64,    66,   -68,   -68,   -53,   -68,   -68,   -68,
+     -68,   -40,   -67,   -68,   -68,   -68,    17,   -68,    18,   -68,
+      14,   -68,   -68,   -68,   -68
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     3,     4,     5,    40,     6,     7,    43,     8,    18,
-      19,    20,    44,    45,    46,    47,    48,    49,    50,    51,
-      52,    53,    54,    81,    55,    82,    56,    85,    57,    58,
-      93
+       0,     3,     4,     5,    45,    46,     6,     7,     8,    15,
+      22,    23,    24,    47,    34,    37,    48,    49,    50,    51,
+      52,    53,    54,    65,    55,    77,    56,    78,    57,    81,
+      58,    59,    66,    97,    98
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -673,79 +677,71 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      61,    70,    17,    12,    63,    41,    23,    21,   103,    23,
-      21,    83,    84,    24,    14,    17,   104,    15,    42,     9,
-       1,    67,     2,    70,    86,    39,    91,    88,    39,    90,
-      92,    23,    21,    13,    42,    96,    96,    95,    12,    96,
-      34,    11,     1,    35,     2,    36,    23,    21,    64,    60,
-      39,     1,    65,    16,    21,   105,   106,   -15,    23,    29,
-      37,    73,    74,   109,    38,    39,    26,    34,   107,     1,
-      35,     2,    36,    23,    21,    34,    25,    27,    35,    28,
-      36,    23,    21,    29,    32,    33,    29,    66,    89,    72,
-      59,    38,    39,    62,    29,    69,    71,    87,    34,    38,
-      39,    35,   100,    36,    23,    21,    34,   101,   102,    35,
-     108,    36,    23,    21,    10,    22,    31,    29,    94,    30,
-      68,    97,    38,    39,    98,    29,    99,     0,    73,    74,
-      38,    39,    75,    76,    77,    78,    79,    80
+      62,    12,    39,    13,    64,    40,    14,    41,    11,    16,
+      89,    89,    11,    16,    89,    26,     1,     1,     2,    20,
+      82,    30,    42,    84,    11,    16,    43,    44,    88,    39,
+      38,    44,    40,   -41,    41,    11,    16,   -63,     9,    21,
+      99,   100,    61,    44,    79,    80,    95,    96,    30,    21,
+      11,   106,    16,    43,    44,    36,    69,    70,    18,    19,
+      69,    70,    25,   105,    71,    72,    73,    74,    75,    76,
+      29,    28,   -16,    27,    30,    60,    33,    85,   104,    10,
+      68,    63,    67,    83,    86,    87,   101,    93,    94,   103,
+      17,   102,    32,    31,    90,    92,    91,    35
 };
 
 static const yytype_int8 yycheck[] =
 {
-      35,    46,    13,     7,    39,    29,     9,    10,    21,     9,
-      10,    13,    14,    17,    24,    26,    29,    27,    29,     0,
-       5,    45,     7,    68,    59,    28,    29,    62,    28,    64,
-      65,     9,    10,    28,    45,    81,    82,    72,    42,    85,
-       3,     9,     5,     6,     7,     8,     9,    10,    24,    27,
-      28,     5,    28,     7,    10,   100,   101,    29,     9,    22,
-      23,    11,    12,   108,    27,    28,    21,     3,   103,     5,
-       6,     7,     8,     9,    10,     3,    29,    25,     6,    24,
-       8,     9,    10,    22,    27,    25,    22,    23,    29,    26,
-      28,    27,    28,    28,    22,    23,    27,    27,     3,    27,
-      28,     6,    29,     8,     9,    10,     3,    29,    25,     6,
-       4,     8,     9,    10,     4,    14,    26,    22,    23,    25,
-      45,    81,    27,    28,    82,    22,    85,    -1,    11,    12,
-      27,    28,    15,    16,    17,    18,    19,    20
+      40,     7,     3,    24,    44,     6,    27,     8,     9,    10,
+      77,    78,     9,    10,    81,    21,     5,     5,     7,     7,
+      60,    22,    23,    63,     9,    10,    27,    28,    68,     3,
+      36,    28,     6,    24,     8,     9,    10,    28,     0,    18,
+      93,    94,    27,    28,    13,    14,    86,    87,    22,    28,
+       9,   104,    10,    27,    28,    34,    11,    12,    28,    25,
+      11,    12,    27,   103,    15,    16,    17,    18,    19,    20,
+      24,    21,    29,    29,    22,    28,    25,    29,     4,     4,
+      26,    28,    27,    27,    24,    28,    25,    29,    29,    21,
+      13,    29,    28,    27,    77,    81,    78,    34
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     5,     7,    33,    34,    35,    37,    38,    40,     0,
-      35,     9,    36,    28,    24,    27,     7,    38,    41,    42,
-      43,    10,    39,     9,    36,    29,    21,    25,    24,    22,
-      44,    43,    27,    25,     3,     6,     8,    23,    27,    28,
-      36,    37,    38,    39,    44,    45,    46,    47,    48,    49,
-      50,    51,    52,    53,    54,    56,    58,    60,    61,    28,
-      27,    52,    28,    52,    24,    28,    23,    37,    46,    23,
-      47,    27,    26,    11,    12,    15,    16,    17,    18,    19,
-      20,    55,    57,    13,    14,    59,    52,    27,    52,    29,
-      52,    29,    52,    62,    23,    52,    53,    56,    58,    60,
-      29,    29,    25,    21,    29,    47,    47,    52,     4,    47
+       0,     5,     7,    33,    34,    35,    38,    39,    40,     0,
+      35,     9,    36,    24,    27,    41,    10,    37,    28,    25,
+       7,    39,    42,    43,    44,    27,    36,    29,    21,    24,
+      22,    45,    44,    25,    46,    38,    39,    47,    36,     3,
+       6,     8,    23,    27,    28,    36,    37,    45,    48,    49,
+      50,    51,    52,    53,    54,    56,    58,    60,    62,    63,
+      28,    27,    53,    28,    53,    55,    64,    27,    26,    11,
+      12,    15,    16,    17,    18,    19,    20,    57,    59,    13,
+      14,    61,    53,    27,    53,    29,    24,    28,    53,    54,
+      58,    60,    62,    29,    29,    53,    53,    65,    66,    48,
+      48,    25,    29,    21,     4,    53,    48
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    32,    33,    34,    34,    35,    35,    36,    37,    37,
-      38,    38,    39,    40,    41,    41,    42,    42,    43,    43,
-      44,    44,    44,    44,    45,    45,    46,    46,    47,    47,
-      47,    47,    47,    48,    48,    49,    49,    50,    51,    51,
-      52,    52,    53,    53,    54,    54,    55,    55,    55,    55,
-      55,    55,    56,    56,    57,    57,    58,    58,    59,    59,
-      60,    60,    60,    60,    61,    61,    62,    62
+       0,    32,    33,    34,    34,    35,    35,    36,    37,    38,
+      38,    39,    39,    41,    40,    42,    42,    43,    43,    44,
+      44,    45,    46,    46,    47,    47,    48,    48,    48,    48,
+      48,    49,    49,    50,    50,    51,    52,    52,    53,    53,
+      54,    55,    54,    56,    56,    57,    57,    57,    57,    57,
+      57,    58,    58,    59,    59,    60,    60,    61,    61,    62,
+      62,    62,    62,    64,    63,    65,    65,    66,    66
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     2,     1,     1,     1,     1,     3,     6,
-       1,     1,     1,     6,     1,     1,     3,     1,     2,     4,
-       4,     3,     3,     2,     2,     1,     2,     1,     1,     1,
-       1,     1,     1,     2,     1,     5,     7,     5,     2,     3,
-       3,     1,     1,     4,     3,     1,     1,     1,     1,     1,
-       1,     1,     3,     1,     1,     1,     3,     1,     1,     1,
-       3,     1,     1,     1,     4,     3,     3,     1
+       0,     2,     1,     2,     1,     1,     1,     1,     1,     3,
+       6,     1,     1,     0,     7,     1,     1,     3,     1,     2,
+       4,     4,     2,     0,     2,     0,     1,     1,     1,     1,
+       1,     2,     1,     5,     7,     5,     2,     3,     3,     1,
+       1,     0,     5,     3,     1,     1,     1,     1,     1,     1,
+       1,     3,     1,     1,     1,     3,     1,     1,     1,     3,
+       1,     1,     1,     0,     5,     1,     0,     3,     1
 };
 
 
@@ -1209,587 +1205,553 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* programa: decl_lista  */
-#line 28 "scanner.y"
-                        { savedTree = yyvsp[0]; }
-#line 1215 "scanner.tab.c"
+#line 27 "scanner.y"
+                    { savedTree = yyvsp[0]; }
+#line 1211 "scanner.tab.c"
     break;
 
   case 3: /* decl_lista: decl_lista decl  */
-#line 31 "scanner.y"
-                        {
-                          YYSTYPE t = yyvsp[-1];
-            						  if(t != NULL){
-            							   while(t -> sibling != NULL){
-            							      t = t->sibling;
-            							   }
-            							   t->sibling = yyvsp[0];
-            							   yyval = yyvsp[-1];
-            						  } else {
-            							yyval = yyvsp[0];
-            						  }
+#line 30 "scanner.y"
+                    { 
+                      YYSTYPE t = yyvsp[-1];
+                      if (t != NULL) {
+                        while (t->sibling != NULL) { t = t->sibling; }
+                        t->sibling = yyvsp[0];
+                        yyval = yyvsp[-1];
+                      } else {
+                        yyval = yyvsp[0];
                       }
-#line 1232 "scanner.tab.c"
+                    }
+#line 1226 "scanner.tab.c"
     break;
 
   case 4: /* decl_lista: decl  */
-#line 44 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1238 "scanner.tab.c"
+#line 41 "scanner.y"
+                      { yyval = yyvsp[0]; }
+#line 1232 "scanner.tab.c"
     break;
 
   case 5: /* decl: var_decl  */
-#line 47 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1244 "scanner.tab.c"
+#line 44 "scanner.y"
+                    { yyval = yyvsp[0]; }
+#line 1238 "scanner.tab.c"
     break;
 
   case 6: /* decl: fun_decl  */
-#line 49 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1250 "scanner.tab.c"
+#line 46 "scanner.y"
+                    { yyval = yyvsp[0]; }
+#line 1244 "scanner.tab.c"
     break;
 
   case 7: /* id: ID  */
-#line 52 "scanner.y"
-                        {
-                          yyval = newExpNode(idK);
-                          yyval->attr.name = copyString(tokenString);
-                        }
-#line 1259 "scanner.tab.c"
+#line 49 "scanner.y"
+                    { savedName = copyString(tokenString);
+                      savedLineNo = lineno;
+                    }
+#line 1252 "scanner.tab.c"
     break;
 
-  case 8: /* var_decl: tipo id SEMICOL  */
-#line 58 "scanner.y"
-                        {
-                          yyval = yyvsp[-2];
-                          yyval->child[0] = yyvsp[-1];
-                        }
-#line 1268 "scanner.tab.c"
+  case 8: /* num: NUM  */
+#line 54 "scanner.y"
+                    { savedNumber = atoi(tokenString);
+                      savedLineNo = lineno;
+                    }
+#line 1260 "scanner.tab.c"
     break;
 
-  case 9: /* var_decl: tipo id LCOLCHETE num RCOLCHETE SEMICOL  */
-#line 63 "scanner.y"
-                        {
-                          yyval = yyvsp[-5];
-                          yyval->child[1] = yyvsp[-4];
-              						yyvsp[-4]->nodekind = stmtK;
-              						yyvsp[-4]->kind.stmt = varK;
-              						yyvsp[-4]->type = voidt;
-              						yyvsp[-4]->attr.len = yyvsp[-2]->attr.val;
-                        }
-#line 1281 "scanner.tab.c"
+  case 9: /* var_decl: tipo id SEMICOL  */
+#line 59 "scanner.y"
+                    { yyval = newDeclNode(varK);
+                      yyval->child[0] = yyvsp[-2];
+                      yyval->lineno = lineno;
+                      yyval->attr.name = savedName;
+                    }
+#line 1270 "scanner.tab.c"
     break;
 
-  case 10: /* tipo: INT  */
-#line 73 "scanner.y"
-                        {
-                           yyval = newExpNode(typeK);
-                           yyval->type = integert;
-                           yyval->attr.name = "integer";
-                        }
-#line 1291 "scanner.tab.c"
+  case 10: /* var_decl: tipo id LCOLCHETE num RCOLCHETE SEMICOL  */
+#line 65 "scanner.y"
+                    { yyval = newDeclNode(vectvarK);
+                      yyval->child[0] = yyvsp[-5];
+                      yyval->lineno = lineno;
+                      yyval->type = VectInt;
+                      yyval->attr.arr.name = savedName;
+                      yyval->attr.arr.size = savedNumber;
+                    }
+#line 1282 "scanner.tab.c"
     break;
 
-  case 11: /* tipo: VOID  */
-#line 79 "scanner.y"
-                        {
-                          yyval = newExpNode(typeK);
-                          yyval->type = voidt;
-                          yyval->attr.name = "void";
-                        }
-#line 1301 "scanner.tab.c"
+  case 11: /* tipo: INT  */
+#line 74 "scanner.y"
+                    { yyval = newExpNode(typeK);
+                      yyval->type = Integer;
+                    }
+#line 1290 "scanner.tab.c"
     break;
 
-  case 12: /* num: NUM  */
-#line 86 "scanner.y"
-                        {
-                          yyval = newExpNode(constK);
-                          yyval->attr.val = atoi(tokenString);
-              						yyval->type = integert;
-                        }
-#line 1311 "scanner.tab.c"
+  case 12: /* tipo: VOID  */
+#line 78 "scanner.y"
+                    { yyval = newExpNode(typeK);
+                      yyval->type = Void;
+                    }
+#line 1298 "scanner.tab.c"
     break;
 
-  case 13: /* fun_decl: tipo ID LPAREN params RPAREN composto_decl  */
-#line 93 "scanner.y"
-                        {
-                          yyval = yyvsp[-5];
-                          YYSTYPE t = newStmtNode(funcK);
-                          t->child[0] = yyvsp[-2];
-                          t->child[1] = yyvsp[0];
-                          yyval->child[0] = t;
-                        }
-#line 1323 "scanner.tab.c"
+  case 13: /* @1: %empty  */
+#line 82 "scanner.y"
+                            {
+                    yyval = newDeclNode(funcK);
+                    yyval->lineno = lineno;
+                    yyval->attr.name = savedName;
+                  }
+#line 1308 "scanner.tab.c"
     break;
 
-  case 14: /* params: param_lista  */
+  case 14: /* fun_decl: tipo id @1 LPAREN params RPAREN composto_decl  */
+#line 88 "scanner.y"
+                  { yyval = yyvsp[-4];
+                    yyval->child[0] = yyvsp[-6];
+                    yyval->child[1] = yyvsp[-2];
+                    yyval->child[2] = yyvsp[0];
+                  }
+#line 1318 "scanner.tab.c"
+    break;
+
+  case 15: /* params: param_lista  */
+#line 95 "scanner.y"
+                      { yyval = yyvsp[0]; }
+#line 1324 "scanner.tab.c"
+    break;
+
+  case 16: /* params: VOID  */
+#line 97 "scanner.y"
+                    { yyval = newDeclNode(paramK);
+                      yyval->type = Void;
+                    }
+#line 1332 "scanner.tab.c"
+    break;
+
+  case 17: /* param_lista: param_lista VIRGULA param  */
 #line 102 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1329 "scanner.tab.c"
+                    { YYSTYPE t = yyvsp[-2];
+                      if (t != NULL) {
+                        while (t->sibling != NULL) { t = t->sibling; }
+                        t->sibling = yyvsp[0];
+                        yyval = yyvsp[-2];
+                      } else {
+                        yyval = yyvsp[-1];
+                      }
+                    }
+#line 1346 "scanner.tab.c"
     break;
 
-  case 15: /* params: VOID  */
-#line 104 "scanner.y"
-                        {
-                          yyval = newExpNode(typeK);
-                         	yyval->attr.name = "void";
-                        }
-#line 1338 "scanner.tab.c"
+  case 18: /* param_lista: param  */
+#line 111 "scanner.y"
+                          { yyval = yyvsp[0]; }
+#line 1352 "scanner.tab.c"
     break;
 
-  case 16: /* param_lista: param_lista VIRGULA param  */
-#line 110 "scanner.y"
-                        {
-                          YYSTYPE t = yyvsp[-2];
-                          if(t != NULL){
-                              while(t->sibling != NULL)
-                                  t = t->sibling;
-                              t->sibling = yyvsp[0];
-                              yyval = yyvsp[-2];
-                          }
-                          else yyval = yyvsp[0];
-                        }
-#line 1353 "scanner.tab.c"
+  case 19: /* param: tipo id  */
+#line 114 "scanner.y"
+                    { yyval = newDeclNode(paramK);
+                      yyval->child[0] = yyvsp[-1];
+                      yyval->attr.name = savedName;
+                    }
+#line 1361 "scanner.tab.c"
     break;
 
-  case 17: /* param_lista: param  */
-#line 121 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1359 "scanner.tab.c"
-    break;
-
-  case 18: /* param: tipo id  */
-#line 124 "scanner.y"
-                        {
-                          yyval = yyvsp[-1];
-                          yyvsp[0]->nodekind = stmtK;
-                          yyvsp[0]->kind.stmt = paramK;
-                          yyval->child[0] = yyvsp[0];
-                        }
+  case 20: /* param: tipo id LCOLCHETE RCOLCHETE  */
+#line 119 "scanner.y"
+                    { yyval = newDeclNode(vectparamK);
+                      yyval->child[0] = yyvsp[-3];
+                      yyval->attr.name = copyString(savedName);
+                    }
 #line 1370 "scanner.tab.c"
     break;
 
-  case 19: /* param: tipo id LCOLCHETE RCOLCHETE  */
+  case 21: /* composto_decl: LCHAVE local_decl stmt_lista RCHAVE  */
+#line 125 "scanner.y"
+                    { yyval = newStmtNode(compostoK);
+                      yyval->child[0] = yyvsp[-2];
+                      yyval->child[1] = yyvsp[-1];
+                    }
+#line 1379 "scanner.tab.c"
+    break;
+
+  case 22: /* local_decl: local_decl var_decl  */
 #line 131 "scanner.y"
-                        {
-                          yyval = yyvsp[-3];
-                          yyvsp[-2]->nodekind = stmtK;
-                          yyvsp[-2]->kind.stmt = paramK;
-                          yyval->child[0] = yyvsp[-2];
-                        }
-#line 1381 "scanner.tab.c"
+                    { YYSTYPE t = yyvsp[-1];
+                      if (t != NULL) {
+                        while (t->sibling != NULL) { t = t->sibling; }
+                        t->sibling = yyvsp[0];
+                        yyval = yyvsp[-1];
+                      } else {
+                        yyval = yyvsp[0];
+                      }
+                    }
+#line 1393 "scanner.tab.c"
     break;
 
-  case 20: /* composto_decl: LCHAVE local_decl stmt_lista RCHAVE  */
-#line 139 "scanner.y"
-                        {
-                          YYSTYPE t = yyvsp[-2];
-                          if(t != NULL){
-              							while(t->sibling != NULL)
-                              t = t->sibling;
-                            t->sibling = yyvsp[-1];
-                            yyval = yyvsp[-2];
-                          }
-              						else yyval = yyvsp[-1];
-                        }
-#line 1396 "scanner.tab.c"
+  case 23: /* local_decl: %empty  */
+#line 140 "scanner.y"
+                    { yyval = NULL; }
+#line 1399 "scanner.tab.c"
     break;
 
-  case 21: /* composto_decl: LCHAVE local_decl RCHAVE  */
-#line 150 "scanner.y"
-                        { yyval = yyvsp[-1]; }
-#line 1402 "scanner.tab.c"
+  case 24: /* stmt_lista: stmt_lista stmt  */
+#line 143 "scanner.y"
+                    { YYSTYPE t = yyvsp[-1];
+                      if (t != NULL) {
+                        while (t->sibling != NULL) { t = t->sibling; }
+                      t->sibling = yyvsp[0];
+                      yyval = yyvsp[-1];
+                      } else {
+                        yyval = yyvsp[0];
+                      }
+                    }
+#line 1413 "scanner.tab.c"
     break;
 
-  case 22: /* composto_decl: LCHAVE stmt_lista RCHAVE  */
+  case 25: /* stmt_lista: %empty  */
 #line 152 "scanner.y"
-                        { yyval = yyvsp[-1]; }
-#line 1408 "scanner.tab.c"
+                    { yyval = NULL; }
+#line 1419 "scanner.tab.c"
     break;
 
-  case 23: /* composto_decl: LCHAVE RCHAVE  */
+  case 26: /* stmt: expressao_decl  */
 #line 154 "scanner.y"
-                        {  }
-#line 1414 "scanner.tab.c"
+                                   { yyval = yyvsp[0]; }
+#line 1425 "scanner.tab.c"
     break;
 
-  case 24: /* local_decl: local_decl var_decl  */
+  case 27: /* stmt: composto_decl  */
+#line 155 "scanner.y"
+                                  { yyval = yyvsp[0]; }
+#line 1431 "scanner.tab.c"
+    break;
+
+  case 28: /* stmt: selecao_decl  */
+#line 156 "scanner.y"
+                                 { yyval = yyvsp[0]; }
+#line 1437 "scanner.tab.c"
+    break;
+
+  case 29: /* stmt: iteracao_decl  */
 #line 157 "scanner.y"
-                        {
-                          YYSTYPE t = yyvsp[-1];
-                          if(t != NULL){
-              							while(t->sibling != NULL)
-                              t = t->sibling;
-                            t->sibling = yyvsp[-1];
-                            yyval = yyvsp[-1];
-                          }
-              						else yyval = yyvsp[0];
-                        }
-#line 1429 "scanner.tab.c"
+                                  { yyval = yyvsp[0]; }
+#line 1443 "scanner.tab.c"
     break;
 
-  case 25: /* local_decl: var_decl  */
-#line 168 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1435 "scanner.tab.c"
+  case 30: /* stmt: retorno_decl  */
+#line 158 "scanner.y"
+                                 { yyval = yyvsp[0]; }
+#line 1449 "scanner.tab.c"
     break;
 
-  case 26: /* stmt_lista: stmt_lista stmt  */
-#line 171 "scanner.y"
-                        {
-                          YYSTYPE t = yyvsp[-1];
-                          if(t != NULL){
-              							while(t->sibling != NULL)
-                              t = t->sibling;
-                            t->sibling = yyvsp[0];
-                            yyval = yyvsp[-1];
-                          }
-              						else yyval = yyvsp[0];
-                        }
-#line 1450 "scanner.tab.c"
+  case 31: /* expressao_decl: expressao SEMICOL  */
+#line 160 "scanner.y"
+                                      { yyval = yyvsp[-1]; }
+#line 1455 "scanner.tab.c"
     break;
 
-  case 27: /* stmt_lista: stmt  */
-#line 182 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1456 "scanner.tab.c"
+  case 32: /* expressao_decl: SEMICOL  */
+#line 161 "scanner.y"
+                            { yyval = NULL; }
+#line 1461 "scanner.tab.c"
     break;
 
-  case 28: /* stmt: expressao_decl  */
-#line 185 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1462 "scanner.tab.c"
+  case 33: /* selecao_decl: IF LPAREN expressao RPAREN stmt  */
+#line 164 "scanner.y"
+                    { yyval = newStmtNode(ifK);
+                      yyval->child[0] = yyvsp[-2];
+                      yyval->child[1] = yyvsp[0];
+                    }
+#line 1470 "scanner.tab.c"
     break;
 
-  case 29: /* stmt: composto_decl  */
-#line 187 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1468 "scanner.tab.c"
-    break;
-
-  case 30: /* stmt: selecao_decl  */
-#line 189 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1474 "scanner.tab.c"
-    break;
-
-  case 31: /* stmt: iteracao_decl  */
-#line 191 "scanner.y"
-                        { yyval = yyvsp[0]; }
+  case 34: /* selecao_decl: IF LPAREN expressao RPAREN stmt ELSE stmt  */
+#line 169 "scanner.y"
+                    { yyval = newStmtNode(ifK);
+                      yyval->child[0] = yyvsp[-4];
+                      yyval->child[1] = yyvsp[-2];
+                      yyval->child[2] = yyvsp[0];
+                    }
 #line 1480 "scanner.tab.c"
     break;
 
-  case 32: /* stmt: retorno_decl  */
-#line 193 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1486 "scanner.tab.c"
+  case 35: /* iteracao_decl: WHILE LPAREN expressao RPAREN stmt  */
+#line 176 "scanner.y"
+                    { yyval = newStmtNode(whileK);
+                      yyval->child[0] = yyvsp[-2];
+                      yyval->child[1] = yyvsp[0];
+                    }
+#line 1489 "scanner.tab.c"
     break;
 
-  case 33: /* expressao_decl: expressao SEMICOL  */
-#line 196 "scanner.y"
-                        { yyval = yyvsp[-1]; }
-#line 1492 "scanner.tab.c"
+  case 36: /* retorno_decl: RETURN SEMICOL  */
+#line 182 "scanner.y"
+                    { yyval = newStmtNode(returnK);
+                      yyval->type = Void;
+                    }
+#line 1497 "scanner.tab.c"
     break;
 
-  case 34: /* expressao_decl: SEMICOL  */
+  case 37: /* retorno_decl: RETURN expressao SEMICOL  */
+#line 186 "scanner.y"
+                    { yyval = newStmtNode(returnK);
+                      yyval->child[0] = yyvsp[-1];
+                    }
+#line 1505 "scanner.tab.c"
+    break;
+
+  case 38: /* expressao: var IGUAL expressao  */
+#line 191 "scanner.y"
+                    { yyval = newStmtNode(assignK);
+                      yyval->child[0] = yyvsp[-2];
+                      yyval->child[1] = yyvsp[0];
+                    }
+#line 1514 "scanner.tab.c"
+    break;
+
+  case 39: /* expressao: simples_expressao  */
+#line 195 "scanner.y"
+                                      { yyval = yyvsp[0]; }
+#line 1520 "scanner.tab.c"
+    break;
+
+  case 40: /* var: id  */
 #line 198 "scanner.y"
-                        {  }
-#line 1498 "scanner.tab.c"
+                    { yyval = newExpNode(IdK);
+                      yyval->attr.name = savedName;
+                    }
+#line 1528 "scanner.tab.c"
     break;
 
-  case 35: /* selecao_decl: IF LPAREN expressao RPAREN stmt  */
+  case 41: /* @2: %empty  */
 #line 201 "scanner.y"
-                        {
-                          yyval = newStmtNode(ifK);
-                          yyval->child[0] = yyvsp[-2];
-                          yyval->child[1] = yyvsp[0];
-                        }
-#line 1508 "scanner.tab.c"
+                       {
+                      yyval = newExpNode(vectIdK);
+                      yyval->attr.name = savedName;
+                    }
+#line 1537 "scanner.tab.c"
     break;
 
-  case 36: /* selecao_decl: IF LPAREN expressao RPAREN stmt ELSE stmt  */
-#line 207 "scanner.y"
-                        {
-                          yyval = newStmtNode(ifK);
-                          yyval->child[0] = yyvsp[-4];
-                          yyval->child[1] = yyvsp[-2];
-                          yyval->child[2] = yyvsp[0];
-                        }
-#line 1519 "scanner.tab.c"
+  case 42: /* var: id @2 LCOLCHETE expressao RCOLCHETE  */
+#line 205 "scanner.y"
+                    {
+                      yyval = yyvsp[-3];
+                      yyval->child[0] = yyvsp[-1];
+                    }
+#line 1546 "scanner.tab.c"
     break;
 
-  case 37: /* iteracao_decl: WHILE LPAREN expressao RPAREN stmt  */
-#line 215 "scanner.y"
-                        {
-                          yyval = newStmtNode(whileK);
-                          yyval->child[0] = yyvsp[-2];
-                          yyval->child[1] = yyvsp[0];
-                        }
-#line 1529 "scanner.tab.c"
+  case 43: /* simples_expressao: soma_expressao relacional soma_expressao  */
+#line 211 "scanner.y"
+                    { yyval = newExpNode(calcK);
+                      yyval->child[0] = yyvsp[-2];
+                      yyval->child[1] = yyvsp[-1];
+                      yyval->child[2] = yyvsp[0];
+                    }
+#line 1556 "scanner.tab.c"
     break;
 
-  case 38: /* retorno_decl: RETURN SEMICOL  */
-#line 222 "scanner.y"
-                        {
-                          yyval = newStmtNode(returnK);
-              						yyval->type = voidt;
-                        }
-#line 1538 "scanner.tab.c"
+  case 44: /* simples_expressao: soma_expressao  */
+#line 216 "scanner.y"
+                                   { yyval = yyvsp[0]; }
+#line 1562 "scanner.tab.c"
     break;
 
-  case 39: /* retorno_decl: RETURN expressao SEMICOL  */
-#line 227 "scanner.y"
-                        {
-                          yyval = newStmtNode(returnK);
-              						yyval->child[0] = yyvsp[-1];
-                        }
-#line 1547 "scanner.tab.c"
-    break;
-
-  case 40: /* expressao: var IGUAL expressao  */
-#line 233 "scanner.y"
-                        {
-                          yyval = newStmtNode(assignK);
-                          yyval->child[0] = yyvsp[-2];
-                          yyval->child[1] = yyvsp[0];
-                        }
-#line 1557 "scanner.tab.c"
-    break;
-
-  case 41: /* expressao: simples_expressao  */
-#line 239 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1563 "scanner.tab.c"
-    break;
-
-  case 42: /* var: id  */
-#line 242 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1569 "scanner.tab.c"
-    break;
-
-  case 43: /* var: id LCOLCHETE expressao RCOLCHETE  */
-#line 244 "scanner.y"
-                        {
-                          yyval = yyvsp[-3];
-                          yyval->child[1] = yyvsp[-1];
-                          yyval->kind.exp = vectK;
-                        }
-#line 1579 "scanner.tab.c"
-    break;
-
-  case 44: /* simples_expressao: soma_expressao relacional soma_expressao  */
-#line 251 "scanner.y"
-                        {
-                          yyval = yyvsp[-1];
-                          yyval->child[0] = yyvsp[-2];
-                          yyval->child[1] = yyvsp[0];
-                        }
-#line 1589 "scanner.tab.c"
-    break;
-
-  case 45: /* simples_expressao: soma_expressao  */
-#line 257 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1595 "scanner.tab.c"
+  case 45: /* relacional: MENOR  */
+#line 219 "scanner.y"
+                    { yyval = newExpNode(opK);
+                      yyval->attr.op = MENOR;
+                    }
+#line 1570 "scanner.tab.c"
     break;
 
   case 46: /* relacional: MENORIGUAL  */
-#line 260 "scanner.y"
-                        {
-                          yyval = newExpNode(opK);
-                          yyval->attr.op = MENORIGUAL;
-              						yyval->type = booleant;
-                        }
-#line 1605 "scanner.tab.c"
+#line 223 "scanner.y"
+                    { yyval = newExpNode(opK);
+                      yyval->attr.op = MENORIGUAL;
+                    }
+#line 1578 "scanner.tab.c"
     break;
 
-  case 47: /* relacional: MENOR  */
+  case 47: /* relacional: MAIOR  */
+#line 227 "scanner.y"
+                    { yyval = newExpNode(opK);
+                      yyval->attr.op = MAIOR;
+                    }
+#line 1586 "scanner.tab.c"
+    break;
+
+  case 48: /* relacional: MAIORIGUAL  */
+#line 231 "scanner.y"
+                    { yyval = newExpNode(opK);
+                      yyval->attr.op = MAIORIGUAL;
+                    }
+#line 1594 "scanner.tab.c"
+    break;
+
+  case 49: /* relacional: IGUALIGUAL  */
+#line 235 "scanner.y"
+                    { yyval = newExpNode(opK);
+                      yyval->attr.op = IGUALIGUAL;
+                    }
+#line 1602 "scanner.tab.c"
+    break;
+
+  case 50: /* relacional: DIFERENTE  */
+#line 239 "scanner.y"
+                    { yyval = newExpNode(opK);
+                      yyval->attr.op = DIFERENTE;
+                    }
+#line 1610 "scanner.tab.c"
+    break;
+
+  case 51: /* soma_expressao: soma_expressao soma termo  */
+#line 244 "scanner.y"
+                    { yyval = newExpNode(calcK);
+                      yyval->child[0] = yyvsp[-2];
+                      yyval->child[1] = yyvsp[-1];
+                      yyval->child[2] = yyvsp[0];
+                    }
+#line 1620 "scanner.tab.c"
+    break;
+
+  case 52: /* soma_expressao: termo  */
+#line 249 "scanner.y"
+                          { yyval = yyvsp[0]; }
+#line 1626 "scanner.tab.c"
+    break;
+
+  case 53: /* soma: SOM  */
+#line 252 "scanner.y"
+                    { yyval = newExpNode(opK);
+                      yyval->attr.op = SOM;
+                    }
+#line 1634 "scanner.tab.c"
+    break;
+
+  case 54: /* soma: SUB  */
+#line 256 "scanner.y"
+                    { yyval = newExpNode(opK);
+                      yyval->attr.op = SUB;
+                    }
+#line 1642 "scanner.tab.c"
+    break;
+
+  case 55: /* termo: termo mult fator  */
+#line 261 "scanner.y"
+                    { yyval = newExpNode(calcK);
+                      yyval->child[0] = yyvsp[-2];
+                      yyval->child[1] = yyvsp[-1];
+                      yyval->child[2] = yyvsp[0];
+                    }
+#line 1652 "scanner.tab.c"
+    break;
+
+  case 56: /* termo: fator  */
 #line 266 "scanner.y"
-                        {
-                          yyval = newExpNode(opK);
-                          yyval->attr.op = MENOR;
-                          yyval->type = booleant;
-                        }
-#line 1615 "scanner.tab.c"
+                          { yyval = yyvsp[0]; }
+#line 1658 "scanner.tab.c"
     break;
 
-  case 48: /* relacional: MAIOR  */
-#line 272 "scanner.y"
-                        {
-                          yyval = newExpNode(opK);
-                          yyval->attr.op = MAIOR;
-                          yyval->type = booleant;
-                        }
-#line 1625 "scanner.tab.c"
+  case 57: /* mult: MUL  */
+#line 269 "scanner.y"
+                    { yyval = newExpNode(opK);
+                      yyval->attr.op = MUL;
+                    }
+#line 1666 "scanner.tab.c"
     break;
 
-  case 49: /* relacional: MAIORIGUAL  */
-#line 278 "scanner.y"
-                        {
-                          yyval = newExpNode(opK);
-                          yyval->attr.op = MAIORIGUAL;
-                          yyval->type = booleant;
-                        }
-#line 1635 "scanner.tab.c"
+  case 58: /* mult: DIV  */
+#line 273 "scanner.y"
+                    { yyval = newExpNode(opK);
+                      yyval->attr.op = DIV;
+                    }
+#line 1674 "scanner.tab.c"
     break;
 
-  case 50: /* relacional: IGUALIGUAL  */
-#line 284 "scanner.y"
-                        {
-                          yyval = newExpNode(opK);
-                          yyval->attr.op = IGUALIGUAL;
-                          yyval->type = booleant;
-                        }
-#line 1645 "scanner.tab.c"
-    break;
-
-  case 51: /* relacional: DIFERENTE  */
-#line 290 "scanner.y"
-                        {
-                          yyval = newExpNode(opK);
-                          yyval->attr.op = DIFERENTE;
-                          yyval->type = booleant;
-                        }
-#line 1655 "scanner.tab.c"
-    break;
-
-  case 52: /* soma_expressao: soma_expressao soma termo  */
-#line 297 "scanner.y"
-                        {
-                          yyval = yyvsp[-1];
-                          yyval->child[0] = yyvsp[-2];
-                          yyval->child[1] = yyvsp[0];
-                        }
-#line 1665 "scanner.tab.c"
-    break;
-
-  case 53: /* soma_expressao: termo  */
-#line 303 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1671 "scanner.tab.c"
-    break;
-
-  case 54: /* soma: SOM  */
-#line 306 "scanner.y"
-                        {
-                          yyval = newExpNode(opK);
-                          yyval->attr.op = SOM;
-                        }
+  case 59: /* fator: LPAREN expressao RPAREN  */
+#line 277 "scanner.y"
+                                            { yyval = yyvsp[-1]; }
 #line 1680 "scanner.tab.c"
     break;
 
-  case 55: /* soma: SUB  */
-#line 311 "scanner.y"
-                      {
-                        yyval = newExpNode(opK);
-                        yyval->attr.op = SUB;
+  case 60: /* fator: var  */
+#line 278 "scanner.y"
+                        { yyval = yyvsp[0]; }
+#line 1686 "scanner.tab.c"
+    break;
+
+  case 61: /* fator: ativacao  */
+#line 279 "scanner.y"
+                             { yyval = yyvsp[0]; }
+#line 1692 "scanner.tab.c"
+    break;
+
+  case 62: /* fator: num  */
+#line 281 "scanner.y"
+                    { yyval = newExpNode(ConstK);
+                      yyval->type = Integer;
+                      yyval->attr.val = atoi(tokenString);
+                    }
+#line 1701 "scanner.tab.c"
+    break;
+
+  case 63: /* @3: %empty  */
+#line 286 "scanner.y"
+                       {
+                      yyval = newExpNode(callK);
+                      yyval->attr.name = savedName;
                       }
-#line 1689 "scanner.tab.c"
+#line 1710 "scanner.tab.c"
     break;
 
-  case 56: /* termo: termo mult fator  */
-#line 317 "scanner.y"
-                      {
-                        yyval = yyvsp[-1];
-                        yyval->child[0] = yyvsp[-2];
-                        yyval->child[1] = yyvsp[0];
+  case 64: /* ativacao: id @3 LPAREN args RPAREN  */
+#line 289 "scanner.y"
+                                           {
+                        yyval = yyvsp[-3];
+                        yyval->child[0] = yyvsp[-1];
+                    }
+#line 1719 "scanner.tab.c"
+    break;
+
+  case 65: /* args: arg_lista  */
+#line 294 "scanner.y"
+                              { yyval = yyvsp[0]; }
+#line 1725 "scanner.tab.c"
+    break;
+
+  case 66: /* args: %empty  */
+#line 295 "scanner.y"
+                    { yyval = NULL; }
+#line 1731 "scanner.tab.c"
+    break;
+
+  case 67: /* arg_lista: arg_lista VIRGULA expressao  */
+#line 298 "scanner.y"
+                    { YYSTYPE t = yyvsp[-2];
+                      if (t != NULL) {
+                        while (t->sibling != NULL) { t = t->sibling; }
+                        t->sibling = yyvsp[0];
+                        yyval = yyvsp[-2];
+                      } else {
+                        yyval = yyvsp[0];
                       }
-#line 1699 "scanner.tab.c"
+                    }
+#line 1745 "scanner.tab.c"
     break;
 
-  case 57: /* termo: fator  */
-#line 323 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1705 "scanner.tab.c"
-    break;
-
-  case 58: /* mult: MUL  */
-#line 326 "scanner.y"
-                      {
-                        yyval = newExpNode(opK);
-                        yyval->attr.op = MUL;
-                      }
-#line 1714 "scanner.tab.c"
-    break;
-
-  case 59: /* mult: DIV  */
-#line 331 "scanner.y"
-                        {
-                          yyval = newExpNode(opK);
-                          yyval->attr.op = DIV;
-                        }
-#line 1723 "scanner.tab.c"
-    break;
-
-  case 60: /* fator: LPAREN expressao RPAREN  */
-#line 337 "scanner.y"
-                        { yyval = yyvsp[-1]; }
-#line 1729 "scanner.tab.c"
-    break;
-
-  case 61: /* fator: var  */
-#line 339 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1735 "scanner.tab.c"
-    break;
-
-  case 62: /* fator: ativacao  */
-#line 341 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1741 "scanner.tab.c"
-    break;
-
-  case 63: /* fator: num  */
-#line 343 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1747 "scanner.tab.c"
-    break;
-
-  case 64: /* ativacao: id LPAREN arg_lista RPAREN  */
-#line 346 "scanner.y"
-                        { 
-                          yyval = yyvsp[-3];
-                          yyval->child[0] = yyvsp[-1];
-                          yyval->nodekind = stmtK;
-                          yyval->kind.stmt = callK;
-                        }
-#line 1758 "scanner.tab.c"
-    break;
-
-  case 65: /* ativacao: id LPAREN RPAREN  */
-#line 353 "scanner.y"
-                        {
-                          yyval = yyvsp[-2];
-                          yyval->nodekind = stmtK;
-                          yyval->kind.stmt = callK;
-                        }
-#line 1768 "scanner.tab.c"
-    break;
-
-  case 66: /* arg_lista: arg_lista VIRGULA expressao  */
-#line 360 "scanner.y"
-                        {
-                          YYSTYPE t = yyvsp[-2];
-                          if(t != NULL){
-              							while(t->sibling != NULL)
-                              t = t->sibling;
-                            t->sibling = yyvsp[0];
-                            yyval = yyvsp[-2];
-                          }
-              						else yyval = yyvsp[0];
-                        }
-#line 1783 "scanner.tab.c"
-    break;
-
-  case 67: /* arg_lista: expressao  */
-#line 371 "scanner.y"
-                        { yyval = yyvsp[0]; }
-#line 1789 "scanner.tab.c"
+  case 68: /* arg_lista: expressao  */
+#line 307 "scanner.y"
+                              { yyval = yyvsp[0]; }
+#line 1751 "scanner.tab.c"
     break;
 
 
-#line 1793 "scanner.tab.c"
+#line 1755 "scanner.tab.c"
 
       default: break;
     }
@@ -1982,7 +1944,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 373 "scanner.y"
+#line 309 "scanner.y"
 
 
 int yyerror(char * message) {

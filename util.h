@@ -6,15 +6,21 @@
  */
 void printToken(FILE* file, TokenType , const char* );
 
+void printTypes(TreeNode* tree);
 /* Function newStmtNode creates a new statement
  * node for syntax tree construction
  */
-TreeNode * newStmtNode(StmtKind);
+TreeNode * newStmtNode(stmtKind);
 
 /* Function newExpNode creates a new expression
  * node for syntax tree construction
  */
-TreeNode * newExpNode(ExpKind);
+TreeNode * newExpNode(expKind);
+
+/* Function newDeclNode creates a new declaration
+ * node for syntax tree construction
+ */
+TreeNode * newDeclNode(declKind);
 
 /* Function copyString allocates and makes a new
  * copy of an existing string
@@ -26,5 +32,5 @@ char * copyString( char * );
  */
 void printTree( TreeNode * );
 
-void aggScope(TreeNode*, char*);
+
 #endif
